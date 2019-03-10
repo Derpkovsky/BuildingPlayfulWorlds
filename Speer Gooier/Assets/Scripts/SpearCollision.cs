@@ -7,50 +7,48 @@ public class SpearCollision : MonoBehaviour
 
     public GameObject spearObject;
     public Rigidbody spear;
-    public GameObject playerLocation;
+    private Transform spearSpawn;
     public bool playerCloseEnough = false;
-    public int spearAmount;
-    public bool VincentHit;
+    public bool vincentHit;
+    private string spearState;
 
-    //Zorgt dat de speer stilstaat als hij een TestWall raakt
-    void OnCollisionEnter(Collision collisionInfo)
+    private void Start()
     {
-        if (collisionInfo.collider.tag == "stickWall")
-        {
-            spear.isKinematic = true;
-        }
-        if (collisionInfo.collider.tag == "Vincent")
-        {
-            //TODO: Game Over
-            Debug.Log("auw!");
-            VincentHit = true;
-        }
+        spearSpawn = GameObject.Find("speerspawn").GetComponent<Transform>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyUp("q") && playerCloseEnough == true)
+        if (Vector3.Distance(spearObject.transform.position, GameObject.Find("FPSController").GetComponent<Transform>().position) < 4)
         {
-            Destroy(spearObject);
-            GameObject.Find("speerspawn").GetComponent<ThrowSpear>().spearAmount += 1;
-        }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            playerLocation = other.gameObject;
             playerCloseEnough = true;
         }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
+        else
         {
             playerCloseEnough = false;
-            playerLocation = null;
+        }
+    }
+
+    //Zorgt dat de speer stilstaat als hij een StickWall raakt
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "stickWall")
+        {
+            GetComponent<Transform>().SetParent(other.gameObject.transform);
+            spear.isKinematic = true;
+            
+            Debug.Log("InTrigger");
+        }
+        if (other.gameObject.tag == "Vincent")
+        {
+            vincentHit = true;
+        }
+    }
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.gameObject.tag == "stickWall")
+        {
+            Debug.Log("UitTrigger");
         }
     }
 }

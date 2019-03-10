@@ -3,31 +3,22 @@ using System.Collections;
 
 public class KyleScript : MonoBehaviour
 {
-    Rigidbody[] rigRigidbodies;
-    Collider[] rigColliders;
+    public float moveSpeed;
+    public Rigidbody target;
+    private GameObject Player;
 
     private void Start()
     {
-        rigRigidbodies = GetComponentsInChildren<Rigidbody>();
-        rigColliders = GetComponentsInChildren<Collider>();
+        Player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    private void Update()
+    void Update()
     {
-        foreach (Rigidbody rb in rigRigidbodies)
+        float moveSpeedCounter = 1 / moveSpeed;
+        while (moveSpeedCounter < 1)
         {
-            rb.isKinematic = true;
-        }
-    }
-
-    private void OnCollisionEnter(Collision collisionInfo)
-    {
-        if (collisionInfo.collider.tag == "Spear")
-        {
-            foreach (Rigidbody rb in rigRigidbodies)
-            {
-                rb.isKinematic = false;
-            }
+            moveSpeedCounter += moveSpeedCounter * Time.deltaTime;
+            target.transform.position = Vector3.Lerp(transform.position, Player.transform.position, moveSpeed * Time.deltaTime);
 
         }
     }

@@ -120,6 +120,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     m_Jump = false;
                     m_Jumping = true;
                     m_MoveDir.y = m_JumpSpeed;
+                    Debug.Log(m_JumpSpeed);
                 }
             }
             else

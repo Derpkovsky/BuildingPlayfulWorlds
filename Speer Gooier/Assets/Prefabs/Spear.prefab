@@ -1,49 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4271086424526532036
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7678935716533652043}
-  - component: {fileID: 4756240794596592143}
-  m_Layer: 0
-  m_Name: PickupTrigger
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7678935716533652043
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4271086424526532036}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.0000002, z: 1.0000002}
-  m_Children: []
-  m_Father: {fileID: 62699993732034690}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4756240794596592143
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4271086424526532036}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.80177903, y: 3.3705466, z: 0.3927382}
-  m_Center: {x: -0.010679042, y: -0.6302862, z: -0.038034353}
 --- !u!1 &5833500501079440282
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +31,6 @@ Transform:
   m_LocalScale: {x: 2.7196, y: 2.7196, z: 1.8527819}
   m_Children:
   - {fileID: 8524558248379718956}
-  - {fileID: 7678935716533652043}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -87,7 +42,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5833500501079440282}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 6.09
   m_Drag: 0.5
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -109,9 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spearObject: {fileID: 5833500501079440282}
   spear: {fileID: 6951682310957917037}
-  playerLocation: {fileID: 0}
-  spearAmount: 0
-  VincentHit: 0
+  playerCloseEnough: 0
+  vincentHit: 0
 --- !u!65 &1807175505475828072
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -123,8 +77,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.08900261, y: 0.06562042, z: 2.3231668}
-  m_Center: {x: -0.0012197495, y: -0.00006389618, z: -0.6539893}
+  m_Size: {x: 0.04432994, y: 0.059081625, z: 2.3052013}
+  m_Center: {x: -0.0012901044, y: -0.00007217168, z: -0.64500654}
 --- !u!1001 &8524558248379669598
 PrefabInstance:
   m_ObjectHideFlags: 0

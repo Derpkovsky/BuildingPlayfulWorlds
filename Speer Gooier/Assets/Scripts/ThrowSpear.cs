@@ -11,19 +11,26 @@ public class ThrowSpear : MonoBehaviour
     public float jumpThreshold;
     public float boostJump;
 
-    public Rigidbody spear;
+    public GameObject spear;
     public Transform player;
-    public Transform spearspawn;
+    public Transform spearSpawn;
     public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpscontroller;
+    public string spearState;
 
     private bool leftDown = false;
     private bool Rdown;
     private float jumpTimer;
 
+    void Start()
+    {
+        GameObject spearObject = (GameObject)Instantiate(spear, spearSpawn.position, transform.rotation);
+        SpearHold();
+    }
 
 
     void Update()
-    {
+    { 
+
         // flipt boolean als de muis omhoog gaat
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {leftDown = true;}
@@ -35,21 +42,28 @@ public class ThrowSpear : MonoBehaviour
             SpearThrow();
         }
 
+
         if (Input.GetKey("r"))  
         {
             RecallSpear();
         }
 
+        if (Input.GetKeyUp("q") && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
+        {
+            SpearHold();
+        }
+
+
+        //JUMPSHIT
         if (Input.GetKey(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
         {
             jumpTimer += 1 * Time.deltaTime;
             Debug.Log(jumpTimer);
         }
-
         if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpThreshold)
         {
-            fpscontroller.m_Jump = true;
             fpscontroller.m_JumpSpeed = boostJump;
+            fpscontroller.m_Jump = true;
             jumpTimer = 0f;
         }
     }
@@ -58,29 +72,44 @@ public class ThrowSpear : MonoBehaviour
     // lerpt de speerpositie naar de spelerpositie
     void RecallSpear()
     {
-        Debug.Log("in functie");
         float actualRecallSpeed = 1 / recallSpeed;
         while (actualRecallSpeed < 1)
         {
             actualRecallSpeed += Time.deltaTime * actualRecallSpeed;
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().position, spearspawn.position, recallSpeed * Time.deltaTime);
+            GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
+            GameObject.FindGameObjectWithTag("Spear").transform.position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position, recallSpeed * Time.deltaTime);
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-            if ()
+            GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, spearSpawn.rotation, recallSpeed * Time.deltaTime);
+            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position) < 0.4)
             {
-                GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = false;
+                SpearHold();
             }
         }
     }
 
-
-    // spawnt de Spear prefab, geeft hem snelheid en verminderd het aantal gooibare speren
+    // unparent de speer van de player, zet hem niet meer op kinematic en geeft force
     void SpearThrow()
     {
-        Rigidbody spearObject = (Rigidbody)Instantiate(spear, spearspawn.position, transform.rotation);
-        spearObject.velocity = transform.forward * throwSpeed;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
+        GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().velocity = transform.forward * throwSpeed;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = true;
         spearAmount -= 1;
     }
+
+    // houdt de speer vast door hem te parenten van de speler en de posities aan elkaar gelijk te stellen
+    public void SpearHold()
+    {
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(spearSpawn);
+        GameObject.FindGameObjectWithTag("Spear").transform.position = spearSpawn.transform.position;
+        GameObject.FindGameObjectWithTag("Spear").transform.rotation = spearSpawn.transform.rotation;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = true;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = false;
+        spearAmount += 1;
+        if (GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezePosition)
+        {
+            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        }
+    }
 }
-
-
