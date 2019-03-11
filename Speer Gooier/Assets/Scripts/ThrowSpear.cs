@@ -8,7 +8,7 @@ public class ThrowSpear : MonoBehaviour
     public float throwSpeed;
     public float recallSpeed;
     public int spearAmount;
-    public float jumpThreshold;
+    public float jumpCounter;
     public float boostJump;
 
     public GameObject spear;
@@ -29,8 +29,7 @@ public class ThrowSpear : MonoBehaviour
 
 
     void Update()
-    { 
-
+    {
         // flipt boolean als de muis omhoog gaat
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {leftDown = true;}
@@ -47,6 +46,10 @@ public class ThrowSpear : MonoBehaviour
         {
             RecallSpear();
         }
+        else
+        {
+            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        }
 
         if (Input.GetKeyUp("q") && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
         {
@@ -60,7 +63,7 @@ public class ThrowSpear : MonoBehaviour
             jumpTimer += 1 * Time.deltaTime;
             Debug.Log(jumpTimer);
         }
-        if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpThreshold)
+        if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpCounter)
         {
             fpscontroller.m_JumpSpeed = boostJump;
             fpscontroller.m_Jump = true;
@@ -72,14 +75,15 @@ public class ThrowSpear : MonoBehaviour
     // lerpt de speerpositie naar de spelerpositie
     void RecallSpear()
     {
-        float actualRecallSpeed = 1 / recallSpeed;
-        while (actualRecallSpeed < 1)
+        float recallSpeedCounter = 1 / recallSpeed;
+        while (recallSpeedCounter < 1)
         {
-            actualRecallSpeed += Time.deltaTime * actualRecallSpeed;
+            recallSpeedCounter += Time.deltaTime * recallSpeedCounter;
             GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
             GameObject.FindGameObjectWithTag("Spear").transform.position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position, recallSpeed * Time.deltaTime);
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, spearSpawn.rotation, recallSpeed * Time.deltaTime);
             if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position) < 0.4)
             {
@@ -107,7 +111,7 @@ public class ThrowSpear : MonoBehaviour
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = true;
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = false;
         spearAmount += 1;
-        if (GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezePosition)
+        if (GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezePosition  || GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezeRotation)
         {
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
