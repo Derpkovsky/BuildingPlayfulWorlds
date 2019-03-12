@@ -13,9 +13,7 @@ public class ThrowSpear : MonoBehaviour
 
     public GameObject spear;
     public Transform player;
-    public Transform spearSpawn;
     public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpscontroller;
-    public string spearState;
 
     private bool leftDown = false;
     private bool Rdown;
@@ -23,7 +21,7 @@ public class ThrowSpear : MonoBehaviour
 
     void Start()
     {
-        GameObject spearObject = (GameObject)Instantiate(spear, spearSpawn.position, transform.rotation);
+        GameObject spearObject = (GameObject)Instantiate(spear, transform.position, transform.rotation);
         SpearHold();
     }
 
@@ -80,12 +78,12 @@ public class ThrowSpear : MonoBehaviour
         {
             recallSpeedCounter += Time.deltaTime * recallSpeedCounter;
             GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
-            GameObject.FindGameObjectWithTag("Spear").transform.position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position, recallSpeed * Time.deltaTime);
+            GameObject.FindGameObjectWithTag("Spear").transform.position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position, recallSpeed * Time.deltaTime);
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-            GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, spearSpawn.rotation, recallSpeed * Time.deltaTime);
-            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, spearSpawn.position) < 0.4)
+            GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, transform.rotation, recallSpeed * Time.deltaTime);
+            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.4)
             {
                 SpearHold();
             }
@@ -105,9 +103,9 @@ public class ThrowSpear : MonoBehaviour
     // houdt de speer vast door hem te parenten van de speler en de posities aan elkaar gelijk te stellen
     public void SpearHold()
     {
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(spearSpawn);
-        GameObject.FindGameObjectWithTag("Spear").transform.position = spearSpawn.transform.position;
-        GameObject.FindGameObjectWithTag("Spear").transform.rotation = spearSpawn.transform.rotation;
+        GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(transform);
+        GameObject.FindGameObjectWithTag("Spear").transform.position = transform.position;
+        GameObject.FindGameObjectWithTag("Spear").transform.rotation = transform.rotation;
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = true;
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = false;
         spearAmount += 1;
