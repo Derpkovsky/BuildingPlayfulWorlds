@@ -21,6 +21,8 @@ public class SpearCollision : MonoBehaviour
         {
             playerCloseEnough = false;
         }
+
+        transform.localScale = transform.localScale;
     }
 
     //Zorgt dat de speer stilstaat als hij een StickWall raakt
