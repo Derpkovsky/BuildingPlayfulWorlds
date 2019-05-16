@@ -11,6 +11,8 @@ public class SpearCollision : MonoBehaviour
     public bool playerCloseEnough = false;
     public bool vincentHit;
 
+    private Vector3 scale;
+
     private void Update()
     {
         if (Vector3.Distance(spearObject.transform.position, GameObject.Find("FPSController").GetComponent<Transform>().position) < 4)
@@ -22,7 +24,7 @@ public class SpearCollision : MonoBehaviour
             playerCloseEnough = false;
         }
 
-        transform.localScale = transform.localScale;
+        scale = transform.localScale;
     }
 
     //Zorgt dat de speer stilstaat als hij een StickWall raakt
@@ -31,6 +33,7 @@ public class SpearCollision : MonoBehaviour
         if (other.gameObject.tag == "stickWall" || other.gameObject.tag == "target")
         {
             GetComponent<Transform>().SetParent(other.gameObject.transform);
+            GetComponent<Transform>().localScale = scale ;
             spear.isKinematic = true;
         }
         if (other.gameObject.tag == "Vincent")
