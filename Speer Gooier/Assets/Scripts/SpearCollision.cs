@@ -24,17 +24,25 @@ public class SpearCollision : MonoBehaviour
             playerCloseEnough = false;
         }
 
-        scale = transform.localScale;
+        //Debug.Log(transform.localScale);
     }
+
+    
 
     //Zorgt dat de speer stilstaat als hij een StickWall raakt
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "stickWall" || other.gameObject.tag == "target")
+        if ( other.gameObject.tag == "target")
         {
-            GetComponent<Transform>().SetParent(other.gameObject.transform);
-            GetComponent<Transform>().localScale = scale ;
             spear.isKinematic = true;
+            GetComponent<Transform>().SetParent(other.gameObject.transform);
+            //transform.rotation = GameObject.FindGameObjectWithTag("Player").GetComponent<ThrowSpear>().spearRotation;
+        }
+
+        if (other.gameObject.tag == "stickWall")
+        {
+            spear.isKinematic = true;
+            transform.rotation = GameObject.FindGameObjectWithTag("Player").GetComponent<ThrowSpear>().spearRotation;
         }
         if (other.gameObject.tag == "Vincent")
         {

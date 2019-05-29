@@ -9,6 +9,7 @@ TagManager:
   - Vincent
   - stickWall
   - target
+  - stone
   layers:
   - Default
   - TransparentFX

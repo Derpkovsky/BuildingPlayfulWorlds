@@ -7,15 +7,15 @@ public class ThrowSpear : MonoBehaviour
 {
     public float throwSpeed;
     public float recallSpeed;
-    public int spearAmount;
+    private int spearAmount;
     public float jumpCounter;
     public float boostJump;
+    public Quaternion spearRotation;
 
     public GameObject spear;
-    public Transform player;
     public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpscontroller;
 
-    private bool leftDown = false;
+    private bool leftDown;
     private bool Rdown;
     private float jumpTimer;
 
@@ -98,9 +98,10 @@ public class ThrowSpear : MonoBehaviour
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().velocity = transform.forward * throwSpeed;
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = true;
         spearAmount -= 1;
+        spearRotation = transform.rotation;
     }
 
-    // houdt de speer vast door hem te parenten van de speler en de posities aan elkaar gelijk te stellen
+    // houdt de speer vast door hem te parenten aan de speler en de posities aan elkaar gelijk te stellen
     public void SpearHold()
     {
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(transform);
@@ -114,4 +115,6 @@ public class ThrowSpear : MonoBehaviour
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
     }
+
+
 }

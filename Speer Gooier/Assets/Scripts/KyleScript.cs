@@ -6,20 +6,24 @@ public class KyleScript : MonoBehaviour
 {
     public float moveSpeed;
     public float rotateSpeed;
+    public float stunTime = 2.0f;
+
+
+    private float oldMoveSpeed;
+    private float oldStunTime;
+    private float spearSpeed;
+    private Vector3 spearImpact;
 
     private bool spearHit;
-    private Vector3 spearSpeed;
     private bool vision = false;
+    private bool stunTimer;
 
 
-    private void OnCollisionEnter(Collision other)
+    void Start()
     {
-        if (other.gameObject.tag == "Spear")
-        {
-            spearHit = true;
-        }
-        
+        spearSpeed = GameObject.Find("speerspawn").GetComponent<ThrowSpear>().throwSpeed;
     }
+
 
     void Update()
     {
@@ -29,19 +33,57 @@ public class KyleScript : MonoBehaviour
 
         if (spearHit == true)
         {
-            //GetComponent<Rigidbody>().isKinematic = false;
+            GetComponent<Rigidbody>().isKinematic = false;
+            hitImpact();
         }
         else
         {
-            //GetComponent<Rigidbody>().isKinematic = true;
+            GetComponent<Rigidbody>().isKinematic = true;
             if (vision == true)
             {
-                Debug.Log(vision);
                 transform.rotation = Quaternion.LookRotation(newDir);
                 transform.position = Vector3.MoveTowards(transform.position, GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>().position, Time.deltaTime * moveSpeed);
             }
         }
+
+        if (stunTimer == true)
+        {
+            oldStunTime = stunTime;
+            stunTime -= Time.deltaTime;
+            if (stunTime <= 0)
+            {
+                stunTimerEnd();
+            }
+        }
     }
+
+    void stunTimerEnd()
+    {
+        moveSpeed = oldMoveSpeed;
+        stunTime = oldStunTime;
+    }
+
+    void hitImpact()
+    {
+        spearImpact = GameObject.Find("speerspawn").GetComponent<ThrowSpear>().spearRotation.eulerAngles;
+        gameObject.GetComponent<Rigidbody>().AddForce(spearImpact);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.tag == "Spear")
+        {
+            spearHit = true;
+        }
+
+        if (other.gameObject.tag == "stone")
+        {
+            oldMoveSpeed = moveSpeed;
+            moveSpeed = 0;
+            stunTimer = true;
+        }
+    }
+
 
     void OnTriggerEnter(Collider other)
     {

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class VictoryUI : MonoBehaviour
 {
     public Text VictoryText;
-    private float UITimer = 2;
 
     void Update()
     {
