@@ -12,17 +12,14 @@ public class KyleScript : MonoBehaviour
     private float oldMoveSpeed;
     private float oldStunTime;
     private float spearSpeed;
-    private Vector3 spearImpact;
+    private float distanceSpearTarget;
 
+    public bool spearClose;
     private bool spearHit;
+    private bool dead = false;
     private bool vision = false;
     private bool stunTimer;
 
-
-    void Start()
-    {
-        spearSpeed = GameObject.Find("speerspawn").GetComponent<ThrowSpear>().throwSpeed;
-    }
 
 
     void Update()
@@ -30,16 +27,38 @@ public class KyleScript : MonoBehaviour
         Vector3 targetDir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
         float step = rotateSpeed * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
+        distanceSpearTarget =
+            Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position + new Vector3(0, 0, 1f),
+                transform.position);
+            
 
-        if (spearHit == true)
+        if (distanceSpearTarget <= 2)
         {
-            GetComponent<Rigidbody>().isKinematic = false;
-            hitImpact();
+            spearClose = true;
         }
         else
         {
-            GetComponent<Rigidbody>().isKinematic = true;
-            if (vision == true)
+            spearClose = false;
+        }
+
+
+        if (spearHit == true)
+        {
+            dead = true;
+            GetComponent<Rigidbody>().isKinematic = false;
+        }
+        else
+        {
+            if (spearClose == true)
+            {
+                GetComponent<Rigidbody>().isKinematic = false;
+            }
+            else
+            {
+                GetComponent<Rigidbody>().isKinematic = true;
+            }
+            
+            if (vision == true && dead != true)
             {
                 transform.rotation = Quaternion.LookRotation(newDir);
                 transform.position = Vector3.MoveTowards(transform.position, GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>().position, Time.deltaTime * moveSpeed);
@@ -52,25 +71,16 @@ public class KyleScript : MonoBehaviour
             stunTime -= Time.deltaTime;
             if (stunTime <= 0)
             {
-                stunTimerEnd();
+                moveSpeed = oldMoveSpeed;
+                stunTime = oldStunTime;
             }
         }
     }
 
-    void stunTimerEnd()
-    {
-        moveSpeed = oldMoveSpeed;
-        stunTime = oldStunTime;
-    }
-
-    void hitImpact()
-    {
-        spearImpact = GameObject.Find("speerspawn").GetComponent<ThrowSpear>().spearRotation.eulerAngles;
-        gameObject.GetComponent<Rigidbody>().AddForce(spearImpact);
-    }
 
     private void OnCollisionEnter(Collision other)
     {
+        // geeft aan of de target geraakt is
         if (other.gameObject.tag == "Spear")
         {
             spearHit = true;
@@ -83,8 +93,9 @@ public class KyleScript : MonoBehaviour
             stunTimer = true;
         }
     }
+ 
 
-
+    // vision cone triggers
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -92,7 +103,6 @@ public class KyleScript : MonoBehaviour
             vision = true;
         }
     }
-
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")

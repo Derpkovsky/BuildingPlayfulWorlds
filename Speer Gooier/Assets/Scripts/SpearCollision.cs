@@ -23,8 +23,6 @@ public class SpearCollision : MonoBehaviour
         {
             playerCloseEnough = false;
         }
-
-        //Debug.Log(transform.localScale);
     }
 
     
@@ -35,14 +33,14 @@ public class SpearCollision : MonoBehaviour
         if ( other.gameObject.tag == "target")
         {
             spear.isKinematic = true;
-            GetComponent<Transform>().SetParent(other.gameObject.transform);
+            transform.SetParent(other.gameObject.transform);
             //transform.rotation = GameObject.FindGameObjectWithTag("Player").GetComponent<ThrowSpear>().spearRotation;
         }
 
         if (other.gameObject.tag == "stickWall")
         {
             spear.isKinematic = true;
-            transform.rotation = GameObject.FindGameObjectWithTag("Player").GetComponent<ThrowSpear>().spearRotation;
+            transform.rotation = GameObject.Find("speerspawn").GetComponent<ThrowSpear>().spearRotation;
         }
         if (other.gameObject.tag == "Vincent")
         {
