@@ -7,6 +7,8 @@ public class holdLeft : MonoBehaviour
     private bool playerCloseToStone;
     private bool rightDown;
     private int stoneAmount;
+    private ArrayList stonesHolding;
+    private ArrayList stonesOnGround;
 
     public float throwSpeed;
 
