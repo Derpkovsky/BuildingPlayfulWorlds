@@ -70,6 +70,9 @@ public class ThrowSpear : MonoBehaviour
     }
 
 
+
+
+
     // lerpt de speerpositie naar de spelerpositie
     void RecallSpear()
     {
@@ -83,7 +86,7 @@ public class ThrowSpear : MonoBehaviour
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, transform.rotation, recallSpeed * Time.deltaTime);
-            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.4)
+            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.5)
             {
                 SpearHold();
             }
@@ -115,6 +118,4 @@ public class ThrowSpear : MonoBehaviour
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
     }
-
-
 }
