@@ -62,8 +62,6 @@ public class holdLeft : MonoBehaviour
 
         }
 
-        Debug.Log(Mathf.Min(distances.ToArray()));
-
     }
 
     public void stoneHold()

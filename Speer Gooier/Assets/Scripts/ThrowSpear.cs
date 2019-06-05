@@ -7,14 +7,12 @@ public class ThrowSpear : MonoBehaviour
 {
     public float throwSpeed;
     public float recallSpeed;
-    private int spearAmount;
-    public float jumpCounter;
-    public float boostJump;
+    public float jumpThreshold;
+    public float boostJumpForce;
     public Quaternion spearRotation;
-
     public GameObject spear;
-    public UnityStandardAssets.Characters.FirstPerson.FirstPersonController fpscontroller;
 
+    private int spearAmount;
     private bool leftDown;
     private bool Rdown;
     private float jumpTimer;
@@ -28,17 +26,15 @@ public class ThrowSpear : MonoBehaviour
 
     void Update()
     {
-        // flipt boolean als de muis omhoog gaat
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+        // ACTION TRIGGERS
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {leftDown = true;}
         else
         {leftDown = false;}
-
         if (leftDown == true && spearAmount > 0)
         {
             SpearThrow();
         }
-
 
         if (Input.GetKey("r"))  
         {
@@ -54,26 +50,26 @@ public class ThrowSpear : MonoBehaviour
             SpearHold();
         }
 
+        GameObject.FindGameObjectWithTag("Spear").transform.rotation = ;
 
-        //JUMPSHIT
-        if (Input.GetKey(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
+        //BOOSTJUMP
+        if (Input.GetKeyDown(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").transform.parent != transform && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
         {
             jumpTimer += 1 * Time.deltaTime;
             Debug.Log(jumpTimer);
-        }
-        if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpCounter)
-        {
-            fpscontroller.m_JumpSpeed = boostJump;
-            fpscontroller.m_Jump = true;
-            jumpTimer = 0f;
+            if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpThreshold)    
+            {
+                GameObject.Find("FPSController").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
+                jumpTimer = 0;
+            }
         }
     }
 
 
 
 
-
-    // lerpt de speerpositie naar de spelerpositie
+    // ROEPT SPEER TERUG
+    //(unparent, position lerp, rotate lerp, freeposition + rotation, bij player: hold)
     void RecallSpear()
     {
         float recallSpeedCounter = 1 / recallSpeed;
@@ -86,14 +82,15 @@ public class ThrowSpear : MonoBehaviour
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
             GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, transform.rotation, recallSpeed * Time.deltaTime);
-            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.5)
+            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.7)
             {
                 SpearHold();
             }
         }
     }
 
-    // unparent de speer van de player, zet hem niet meer op kinematic en geeft force
+    // GOOIT DE SPEER
+    // (kinematic uit, unparent, geef velocity, zet collider aan, -1 speer)
     void SpearThrow()
     {
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
@@ -104,7 +101,8 @@ public class ThrowSpear : MonoBehaviour
         spearRotation = transform.rotation;
     }
 
-    // houdt de speer vast door hem te parenten aan de speler en de posities aan elkaar gelijk te stellen
+    // HOUDT DE SPEER VAST
+    // (setParent, zet transform en rotatie gelijk, kinematic aan, collider uit, +1 speer, freezeposition uit)
     public void SpearHold()
     {
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(transform);
