@@ -16,6 +16,7 @@ public class ThrowSpear : MonoBehaviour
     private bool leftDown;
     private bool Rdown;
     private float jumpTimer;
+    private bool JUMP;
 
     void Start()
     {
@@ -50,17 +51,28 @@ public class ThrowSpear : MonoBehaviour
             SpearHold();
         }
 
-        GameObject.FindGameObjectWithTag("Spear").transform.rotation = ;
+        if (Input.GetKeyUp(KeyCode.Backspace))
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
+        }
+
+
+        if( GameObject.FindGameObjectWithTag("Spear").transform.parent != transform)
+        {
+
+        }
+
 
         //BOOSTJUMP
-        if (Input.GetKeyDown(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").transform.parent != transform && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
+        if (Input.GetKey(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
         {
             jumpTimer += 1 * Time.deltaTime;
-            Debug.Log(jumpTimer);
-            if (Input.GetKeyUp(KeyCode.M) && jumpTimer >= jumpThreshold)    
+            Debug.Log("timer:" + " " + jumpTimer);
+            if ( jumpTimer >= jumpThreshold)    
             {
-                GameObject.Find("FPSController").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
-                jumpTimer = 0;
+                Debug.Log("JUMP");
+                Jump();
+
             }
         }
     }
@@ -115,5 +127,13 @@ public class ThrowSpear : MonoBehaviour
         {
             GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
+    }
+
+    // SPRINGT HOOG 
+    // (velocity aan player)
+    public void Jump()
+    {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
+        jumpTimer = 0;
     }
 }
