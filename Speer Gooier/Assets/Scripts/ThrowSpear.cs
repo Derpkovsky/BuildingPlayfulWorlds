@@ -72,7 +72,6 @@ public class ThrowSpear : MonoBehaviour
             Debug.Log("timer:" + " " + jumpTimer);
             if ( jumpTimer >= jumpThreshold)    
             {
-
                 Jump();
             }
         }
