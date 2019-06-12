@@ -903,7 +903,7 @@ GameObject:
   - component: {fileID: 438372966}
   m_Layer: 20
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -1411,7 +1411,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517578419}
   m_LocalRotation: {x: -0, y: 0.08903785, z: -0, w: 0.9960283}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1648015061}
@@ -4033,6 +4033,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1.43
       objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
 --- !u!1 &1896184618 stripped
@@ -4056,6 +4060,7 @@ MonoBehaviour:
   Stones: []
   StoneHand: {fileID: 1044939033}
   throwSpeed: 20.8
+  isGrounded: 0
 --- !u!1 &1919256267
 GameObject:
   m_ObjectHideFlags: 0

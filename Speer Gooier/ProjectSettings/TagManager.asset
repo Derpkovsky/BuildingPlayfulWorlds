@@ -11,6 +11,7 @@ TagManager:
   - stone
   - Spear
   - spear
+  - floor
   layers:
   - Default
   - TransparentFX

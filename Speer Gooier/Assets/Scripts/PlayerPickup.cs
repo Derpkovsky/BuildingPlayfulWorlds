@@ -7,6 +7,7 @@ public class PlayerPickup : MonoBehaviour
     public List<GameObject> Stones;
     public Transform StoneHand;
     public float throwSpeed = 5f;
+    public bool isGrounded;
 
     private GameObject closestStone;
     private bool stoneClose = false;
@@ -38,8 +39,8 @@ public class PlayerPickup : MonoBehaviour
     {
         stonesHolding += 1;
         closestStone.transform.SetParent(StoneHand);
-        closestStone.transform.position = StoneHand.transform.position;
-        closestStone.transform.rotation = StoneHand.transform.rotation;
+        closestStone.transform.position = StoneHand.transform.position + new Vector3(Random.Range(-0.15f, 0.2f), Random.Range(-0.1f, 0.27f), Random.Range(-.2f, .2f));
+        closestStone.transform.rotation = Random.rotation;
         closestStone.GetComponent<Rigidbody>().isKinematic = true;
         closestStone.GetComponent<Collider>().enabled = false;
         Stones.Add(closestStone);

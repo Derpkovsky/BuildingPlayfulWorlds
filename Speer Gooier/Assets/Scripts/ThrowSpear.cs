@@ -17,9 +17,11 @@ public class ThrowSpear : MonoBehaviour
     private bool Rdown;
     private float jumpTimer;
     private bool JUMP;
+    private Rigidbody playerBody;
 
     void Start()
     {
+        playerBody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         GameObject spearObject = (GameObject)Instantiate(spear, transform.position, transform.rotation);
         SpearHold();
     }
@@ -53,7 +55,7 @@ public class ThrowSpear : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Backspace))
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
+            playerBody.AddForce(transform.up * boostJumpForce);
         }
 
 
@@ -70,9 +72,8 @@ public class ThrowSpear : MonoBehaviour
             Debug.Log("timer:" + " " + jumpTimer);
             if ( jumpTimer >= jumpThreshold)    
             {
-                Debug.Log("JUMP");
-                Jump();
 
+                Jump();
             }
         }
     }
@@ -102,7 +103,7 @@ public class ThrowSpear : MonoBehaviour
     }
 
     // GOOIT DE SPEER
-    // (kinematic uit, unparent, geef velocity, zet collider aan, -1 speer)
+    // (kinematic uit, unparent, geef velocity, zet collider aan, -1 speer, jumptimer=0)
     void SpearThrow()
     {
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
@@ -117,6 +118,7 @@ public class ThrowSpear : MonoBehaviour
     // (setParent, zet transform en rotatie gelijk, kinematic aan, collider uit, +1 speer, freezeposition uit)
     public void SpearHold()
     {
+        jumpTimer = 0;
         GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(transform);
         GameObject.FindGameObjectWithTag("Spear").transform.position = transform.position;
         GameObject.FindGameObjectWithTag("Spear").transform.rotation = transform.rotation;
@@ -133,7 +135,10 @@ public class ThrowSpear : MonoBehaviour
     // (velocity aan player)
     public void Jump()
     {
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>().AddForce(transform.up * boostJumpForce);
+        playerBody.isKinematic = false;
+        playerBody.velocity = transform.up * boostJumpForce;
+        playerBody.isKinematic = true;
         jumpTimer = 0;
+        Debug.Log("JUMP");
     }
 }
