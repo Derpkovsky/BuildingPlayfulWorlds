@@ -12,6 +12,7 @@ public class ThrowSpear : MonoBehaviour
     public Quaternion spearRotation;
     public GameObject spear;
 
+
     private int spearAmount;
     private bool leftDown;
     private bool Rdown;
@@ -19,13 +20,18 @@ public class ThrowSpear : MonoBehaviour
     private float oldJump;
     private Rigidbody playerBody;
     private FirstPersonController controller;
+    public Transform pivot;
+
 
     void Start()
     {
         playerBody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         GameObject spearObject = (GameObject)Instantiate(spear, transform.position, transform.rotation);
+        spear = GameObject.FindGameObjectWithTag("Spear");
         controller = GameObject.Find("FPSController").GetComponent<FirstPersonController>();
+        oldJump = controller.m_JumpSpeed;
         SpearHold();
+        pivot = GameObject.FindGameObjectWithTag("Spear").transform.GetChild(0).transform;
     }
 
 
@@ -47,39 +53,37 @@ public class ThrowSpear : MonoBehaviour
         }
         else
         {
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            spear.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
 
-        if (Input.GetKeyUp("q") && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
+        if (Input.GetKeyUp("q") && spear.GetComponent<SpearCollision>().playerCloseEnough == true)
         {
             SpearHold();
         }
 
 
-        if( GameObject.FindGameObjectWithTag("Spear").transform.parent != transform)
-        {
-
-        }
 
 
         //BOOSTJUMP
-        if (Input.GetKey(KeyCode.M) && GameObject.FindGameObjectWithTag("Spear").GetComponent<SpearCollision>().playerCloseEnough == true)
+        if (Input.GetKey(KeyCode.M) &&
+            spear.GetComponent<SpearCollision>().playerCloseEnough &&
+            spear.transform.parent == null &&
+            spear.GetComponent<Rigidbody>().isKinematic
+            )
         {
             jumpTimer += 1 * Time.deltaTime;
-            Debug.Log("timer:" + " " + jumpTimer);
+            spear.transform.RotateAround(pivot.position, -pivot.right, jumpTimer /5);
             if ( jumpTimer >= jumpThreshold)
             {
                 jumpTimer = 0;
-                oldJump = controller.m_JumpSpeed;
+                spear.transform.rotation = spearRotation;
                 controller.m_OldJumpSpeed = boostJump;
                 controller.m_Jump = true;
-                Debug.Log(controller.m_OldJumpSpeed);
-                if (controller.m_Jump == false)
-                {
-                    controller.m_OldJumpSpeed = oldJump;
-                    Debug.Log(controller.m_OldJumpSpeed);
-                }
             }
+        }
+        if (controller.m_Jumping)
+        {
+            controller.m_OldJumpSpeed = oldJump;
         }
     }
 
@@ -94,13 +98,13 @@ public class ThrowSpear : MonoBehaviour
         while (recallSpeedCounter < 1)
         {
             recallSpeedCounter += Time.deltaTime * recallSpeedCounter;
-            GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
-            GameObject.FindGameObjectWithTag("Spear").transform.position = Vector3.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position, recallSpeed * Time.deltaTime);
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
-            GameObject.FindGameObjectWithTag("Spear").transform.rotation = Quaternion.Lerp(GameObject.FindGameObjectWithTag("Spear").transform.rotation, transform.rotation, recallSpeed * Time.deltaTime);
-            if (Vector3.Distance(GameObject.FindGameObjectWithTag("Spear").transform.position, transform.position) < 0.7)
+            spear.transform.parent = null;
+            spear.transform.position = Vector3.Lerp(spear.transform.position, transform.position, recallSpeed * Time.deltaTime);
+            spear.GetComponent<Rigidbody>().isKinematic = false;
+            spear.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            spear.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+            spear.transform.rotation = Quaternion.Lerp(spear.transform.rotation, transform.rotation, recallSpeed * Time.deltaTime);
+            if (Vector3.Distance(spear.transform.position, transform.position) < 0.7)
             {
                 SpearHold();
             }
@@ -111,10 +115,10 @@ public class ThrowSpear : MonoBehaviour
     // (kinematic uit, unparent, geef velocity, zet collider aan, -1 speer, jumptimer=0)
     void SpearThrow()
     {
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = false;
-        GameObject.FindGameObjectWithTag("Spear").transform.parent = null;
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().velocity = transform.forward * throwSpeed;
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = true;
+        spear.GetComponent<Rigidbody>().isKinematic = false;
+        spear.transform.parent = null;
+        spear.GetComponent<Rigidbody>().velocity = transform.forward * throwSpeed;
+        spear.GetComponent<Collider>().enabled = true;
         spearAmount -= 1;
         spearRotation = transform.rotation;
     }
@@ -124,29 +128,15 @@ public class ThrowSpear : MonoBehaviour
     public void SpearHold()
     {
         jumpTimer = 0;
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Transform>().SetParent(transform);
-        GameObject.FindGameObjectWithTag("Spear").transform.position = transform.position;
-        GameObject.FindGameObjectWithTag("Spear").transform.rotation = transform.rotation;
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().isKinematic = true;
-        GameObject.FindGameObjectWithTag("Spear").GetComponent<Collider>().enabled = false;
+        spear.GetComponent<Transform>().SetParent(transform);
+        spear.transform.position = transform.position;
+        spear.transform.rotation = transform.rotation;
+        spear.GetComponent<Rigidbody>().isKinematic = true;
+        spear.GetComponent<Collider>().enabled = false;
         spearAmount += 1;
-        if (GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezePosition  || GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezeRotation)
+        if (spear.GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezePosition  || spear.GetComponent<Rigidbody>().constraints == RigidbodyConstraints.FreezeRotation)
         {
-            GameObject.FindGameObjectWithTag("Spear").GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            spear.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
         }
     }
-
-
-    /*
-    // SPRINGT HOOG 
-    // (velocity aan player)
-    public void Jump()
-    {
-        playerBody.isKinematic = false;
-        playerBody.velocity = transform.up * boostJumpForce;
-        playerBody.isKinematic = true;
-        jumpTimer = 0;
-        Debug.Log("JUMP");
-    }
-    */
 }

@@ -40,7 +40,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private Vector3 m_OriginalCameraPosition;
         private float m_StepCycle;
         private float m_NextStep;
-        private bool m_Jumping;
+        public bool m_Jumping;
         private AudioSource m_AudioSource;
 
 
@@ -117,9 +117,9 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 if (m_Jump)
                 {
                     PlayJumpSound();
-                    m_Jump = false;
                     m_Jumping = true;
                     m_MoveDir.y = m_JumpSpeed;
+                    m_Jump = false;
                     Debug.Log(m_JumpSpeed);
                 }
             }
