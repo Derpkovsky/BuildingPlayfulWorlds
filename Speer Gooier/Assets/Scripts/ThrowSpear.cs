@@ -8,7 +8,7 @@ public class ThrowSpear : MonoBehaviour
     public float throwSpeed;
     public float recallSpeed;
     public float jumpThreshold;
-    public float boostJumpForce;
+    public float boostJump;
     public Quaternion spearRotation;
     public GameObject spear;
 
@@ -16,13 +16,15 @@ public class ThrowSpear : MonoBehaviour
     private bool leftDown;
     private bool Rdown;
     private float jumpTimer;
-    private bool JUMP;
+    private float oldJump;
     private Rigidbody playerBody;
+    private FirstPersonController controller;
 
     void Start()
     {
         playerBody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         GameObject spearObject = (GameObject)Instantiate(spear, transform.position, transform.rotation);
+        controller = GameObject.Find("FPSController").GetComponent<FirstPersonController>();
         SpearHold();
     }
 
@@ -53,11 +55,6 @@ public class ThrowSpear : MonoBehaviour
             SpearHold();
         }
 
-        if (Input.GetKeyUp(KeyCode.Backspace))
-        {
-            playerBody.AddForce(transform.up * boostJumpForce);
-        }
-
 
         if( GameObject.FindGameObjectWithTag("Spear").transform.parent != transform)
         {
@@ -70,9 +67,18 @@ public class ThrowSpear : MonoBehaviour
         {
             jumpTimer += 1 * Time.deltaTime;
             Debug.Log("timer:" + " " + jumpTimer);
-            if ( jumpTimer >= jumpThreshold)    
+            if ( jumpTimer >= jumpThreshold)
             {
-                Jump();
+                jumpTimer = 0;
+                oldJump = controller.m_JumpSpeed;
+                controller.m_OldJumpSpeed = boostJump;
+                controller.m_Jump = true;
+                Debug.Log(controller.m_OldJumpSpeed);
+                if (controller.m_Jump == false)
+                {
+                    controller.m_OldJumpSpeed = oldJump;
+                    Debug.Log(controller.m_OldJumpSpeed);
+                }
             }
         }
     }
@@ -130,6 +136,8 @@ public class ThrowSpear : MonoBehaviour
         }
     }
 
+
+    /*
     // SPRINGT HOOG 
     // (velocity aan player)
     public void Jump()
@@ -140,4 +148,5 @@ public class ThrowSpear : MonoBehaviour
         jumpTimer = 0;
         Debug.Log("JUMP");
     }
+    */
 }
