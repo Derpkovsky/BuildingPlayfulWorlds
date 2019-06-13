@@ -20,7 +20,7 @@ public class ThrowSpear : MonoBehaviour
     private float oldJump;
     private Rigidbody playerBody;
     private FirstPersonController controller;
-    public Transform pivot;
+    private Transform pivot;
 
 
     void Start()
