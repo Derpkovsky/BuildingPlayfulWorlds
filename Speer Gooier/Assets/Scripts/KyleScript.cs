@@ -19,19 +19,12 @@ public class KyleScript : MonoBehaviour
     private bool dead = false;
     private bool vision = false;
     private bool stunTimer;
-    private GameObject player;
-
-
-    void start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
 
 
 
     void Update()
     {
-        Vector3 targetDir = player.transform.position - transform.position;
+        Vector3 targetDir = GameObject.FindGameObjectWithTag("Player").transform.position - transform.position;
         float step = rotateSpeed * Time.deltaTime;
         Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0f);
         distanceSpearTarget =
@@ -68,7 +61,7 @@ public class KyleScript : MonoBehaviour
             if (vision == true && dead != true)
             {
                 transform.rotation = Quaternion.LookRotation(newDir);
-                transform.position = Vector3.MoveTowards(transform.position, player.GetComponent<Transform>().position, Time.deltaTime * moveSpeed);
+                transform.position = Vector3.MoveTowards(transform.position, GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>().position, Time.deltaTime * moveSpeed);
             }
         }
 

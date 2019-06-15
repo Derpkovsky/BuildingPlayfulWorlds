@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2575965167871240832}
   - component: {fileID: 2575965167871240833}
   - component: {fileID: 2575965167871240862}
+  - component: {fileID: 664289328643734147}
   - component: {fileID: 2575965167871240863}
   - component: {fileID: 2575965167871240835}
-  - component: {fileID: 9045605599435627097}
   m_Layer: 0
   m_Name: Stone
   m_TagString: stone
@@ -80,6 +80,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &664289328643734147
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2575965167871240860}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.430355, y: 4.7547398, z: 5.4951606}
+  m_Center: {x: -0.10125617, y: 0.2410256, z: -0.069003955}
 --- !u!65 &2575965167871240863
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -109,16 +122,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &9045605599435627097
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2575965167871240860}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.608866, y: 2.607785, z: 2.948968}
-  m_Center: {x: -0.07447164, y: 0.18080351, z: 0.072802}

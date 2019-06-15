@@ -5,10 +5,14 @@ using UnityEngine;
 public class PlayerPickup : MonoBehaviour
 {
     public List<GameObject> Stones;
+    public List<GameObject> stonesClose;
     public Transform StoneHand;
     public float throwSpeed = 5f;
+    public float horizontalOffset = 0.15f;
+    public float verticalOffset = 0.17f;
 
     private GameObject closestStone;
+    private GameObject loadedStone;
     private bool stoneClose = false;
     private int stonesHolding;
     private GameObject player;
@@ -23,42 +27,44 @@ public class PlayerPickup : MonoBehaviour
     {
         if (stoneClose && Input.GetKeyDown(KeyCode.E))
         {
+            closestStone = stonesClose[0];
             SetStone();
         }
 
-        if (stonesHolding > 0 && Input.GetMouseButtonDown(1))
+        if (Stones != null && Input.GetMouseButtonDown(1))
         {
-            ThrowStone();
             if (Stones != null)
             {
-                closestStone = Stones[0];
+                loadedStone = Stones[0];
             }
             else
             {
-                closestStone = new GameObject("Empty");
+                loadedStone = new GameObject("Empty");
             }
+            ThrowStone();
         }
+
+
     }
 
     private void SetStone()
     {
-        stonesHolding += 1;
         closestStone.transform.SetParent(StoneHand);
-        closestStone.transform.position = StoneHand.transform.position + new Vector3(Random.Range(-0.15f, 0.1f), Random.Range(-0.1f, 0.17f), Random.Range(-.2f, .2f));
+        closestStone.transform.position = StoneHand.transform.position + new Vector3(Random.Range(-horizontalOffset, horizontalOffset), Random.Range(-verticalOffset, verticalOffset), 0);
         closestStone.transform.rotation = Random.rotation;
         closestStone.GetComponent<Rigidbody>().isKinematic = true;
         closestStone.GetComponent<Collider>().enabled = false;
         Stones.Add(closestStone);
+        stonesClose.Remove(closestStone);
     }
 
     private void ThrowStone()
     {
-        stonesHolding -= 1;
-        closestStone.transform.SetParent(null);
-        closestStone.GetComponent<Collider>().enabled = true;
-        closestStone.GetComponent<Rigidbody>().isKinematic = false;
-        closestStone.GetComponent<Rigidbody>().velocity = player.transform.forward * throwSpeed;
-        Stones.Remove(closestStone);
+        loadedStone.transform.SetParent(null);
+        loadedStone.GetComponent<Collider>().enabled = true;
+        loadedStone.GetComponent<Rigidbody>().isKinematic = false;
+        loadedStone.GetComponent<Rigidbody>().velocity = player.transform.forward * throwSpeed;
+        Stones.Remove(loadedStone);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,7 +72,7 @@ public class PlayerPickup : MonoBehaviour
         if (other.gameObject.tag == "stone")
         {
             stoneClose = true;
-            closestStone = other.gameObject;
+            stonesClose.Add(other.gameObject);
         }
     }
 
@@ -75,6 +81,7 @@ public class PlayerPickup : MonoBehaviour
         if (other.gameObject.tag == "stone")
         {
             stoneClose = false;
+            stonesClose.Remove(other.gameObject);
         }
     }
 }
