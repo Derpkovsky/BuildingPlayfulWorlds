@@ -41,6 +41,7 @@ public class PlayerPickup : MonoBehaviour
             {
                 loadedStone = new GameObject("Empty");
             }
+
             ThrowStone();
         }
 
@@ -50,7 +51,9 @@ public class PlayerPickup : MonoBehaviour
     private void SetStone()
     {
         closestStone.transform.SetParent(StoneHand);
-        closestStone.transform.position = StoneHand.transform.position + new Vector3(Random.Range(-horizontalOffset, horizontalOffset), Random.Range(-verticalOffset, verticalOffset), 0);
+        closestStone.transform.position = StoneHand.transform.position + new Vector3(
+                                              Random.Range(-horizontalOffset, horizontalOffset),
+                                              Random.Range(-verticalOffset, verticalOffset), 0);
         closestStone.transform.rotation = Random.rotation;
         closestStone.GetComponent<Rigidbody>().isKinematic = true;
         closestStone.GetComponent<Collider>().enabled = false;
