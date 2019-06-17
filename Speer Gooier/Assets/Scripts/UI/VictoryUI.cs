@@ -4,13 +4,20 @@ using UnityEngine.UI;
 public class VictoryUI : MonoBehaviour
 {
     public Text VictoryText;
+    private bool victory;
+
+    void Start()
+    {
+        victory = GameObject.Find("Exit").GetComponent<VictoryTrigger>().Victorybool;
+    }
 
     void Update()
     {
-        if (GameObject.Find("Exit").GetComponent<VictoryTrigger>().Victorybool == true)
+        if (victory)
         {
-            VictoryText.text = "Level Cleared!";
-            Debug.Log("Level Cleared");
+            VictoryText.text = "Thank you for delivering the package!" +
+                               "You've helped us so much";
+            
         }
         else
         {
