@@ -4874,8 +4874,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f99801da10311704f9429f5dbb6080b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   VictoryText: {fileID: 0}
   victory: 0
+=======
+  VictoryText: {fileID: 747843027}
+>>>>>>> 6bb655f9932876f80b880d7045bfac850d99d15c
 --- !u!1001 &752676067
 PrefabInstance:
   m_ObjectHideFlags: 0
