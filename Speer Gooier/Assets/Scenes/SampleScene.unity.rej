@@ -1,0 +1,10 @@
+diff a/Speer Gooier/Assets/Scenes/SampleScene.unity b/Speer Gooier/Assets/Scenes/SampleScene.unity	(rejected hunks)
+@@ -4826,7 +4826,7 @@
+   m_Script: {fileID: 11500000, guid: f99801da10311704f9429f5dbb6080b0, type: 3}
+   m_Name: 
+   m_EditorClassIdentifier: 
+-  VictoryText: {fileID: 0}
++  VictoryText: {fileID: 747843027}
+ --- !u!1001 &752676067
+ PrefabInstance:
+   m_ObjectHideFlags: 0
