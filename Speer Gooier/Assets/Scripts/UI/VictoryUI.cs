@@ -4,16 +4,16 @@ using UnityEngine.UI;
 public class VictoryUI : MonoBehaviour
 {
     public Text VictoryText;
-    private bool victory;
+    private VictoryTrigger victoryTrigger;
 
     void Start()
     {
-        victory = GameObject.Find("Exit").GetComponent<VictoryTrigger>().Victorybool;
+        victoryTrigger = GameObject.Find("Exit").GetComponent<VictoryTrigger>();
     }
 
     void Update()
     {
-        if (victory)
+        if (victoryTrigger.Victorybool)
         {
             VictoryText.text = "Thank you for delivering the package!" +
                                "You've helped us so much";
