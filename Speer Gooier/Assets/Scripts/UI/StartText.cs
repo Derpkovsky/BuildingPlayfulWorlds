@@ -8,7 +8,6 @@ public class StartText : MonoBehaviour
 
     void Start()
     {
-
         Destroy(gameObject, time);
     }
 }
